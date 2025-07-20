@@ -137,7 +137,6 @@ def save_user(username, password):
             "Transport": ["uber", "taxi", "gas"],
             "Entertainment": ["movie", "game", "concert"],
             "Bills": ["electric", "water", "internet"],
-            "Other": []
         }
         safe_json_write(categories_file, default_categories)
         
@@ -292,11 +291,14 @@ def finance_app(username):
             )
             if st.button("Set Balance", key="set_balance"):
                 if starting_balance > 0:
-                    if update_user_balance(username, starting_balance):
-                        st.success("Balance set successfully!")
-                        st.rerun()
+                    if username not in load_users():
+                        st.error("User not found. Please log in again or create an account.")
                     else:
-                        st.error("Failed to save balance")
+                        if update_user_balance(username, starting_balance):
+                            st.success("Balance set successfully!")
+                            st.rerun()
+                        else:
+                            st.error("Failed to save balance")
                 else:
                     st.error("Please enter a positive amount")
 
