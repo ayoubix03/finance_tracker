@@ -350,6 +350,7 @@ def finance_app(username):
                                          columns=['Date', 'Description', 'Category', 'Amount'])
                     st.session_state.expenses_df = pd.concat([expenses_df, new_expense], ignore_index=True)
                     if save_user_data(username, st.session_state.expenses_df) and update_user_balance(username, -amount):
+                        st.cache_data.clear()  # <-- Add this line
                         st.success("Expense added successfully!")
                         st.rerun()
                     else:
@@ -550,6 +551,7 @@ def finance_app(username):
                             safe_json_write(balance_file, {"balance": 0.0})
                             st.success("✅ All financial data has been permanently deleted!")
                             st.session_state.expenses_df = pd.DataFrame(columns=['Date', 'Description', 'Category', 'Amount'])
+                            st.cache_data.clear()  # <-- Add this line
                             st.rerun()
                         except Exception as e:
                             st.error(f"Error deleting data: {str(e)}")
